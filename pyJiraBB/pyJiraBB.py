@@ -5,6 +5,7 @@ import json
 import sys
 from Jira import Jira
 from BitBucket import BitBucket
+from config import *
 
 # Create meaningful project key for created projects
 def create_project_key(project_name):
@@ -22,9 +23,9 @@ if __name__ == "__main__":
     pk = args[1]
     status = args[2]
 
-    jira = Jira("http://192.168.1.19:8080", "metinkilicse", "123456")
-    bb = BitBucket('http://192.168.1.19:7990/rest/api/1.0/',
-                   'metinkilicse','123456')
+    jira = Jira(JIRA_URL, JIRA_USER, JIRA_PASS)
+    bb = BitBucket(BB_API_URL,
+                   BB_USER,BB_PASS)
     jira.set_project(pk)
     issues = jira.get_project_issues()
     for issue in issues:
