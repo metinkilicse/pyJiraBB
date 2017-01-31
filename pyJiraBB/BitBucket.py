@@ -70,23 +70,23 @@ class BitBucket:
                 return project["key"]
         return False
 
+    def ask_post_request(self, url, data):
+
+        header = {"X-Atlassian-Token": "nocheck",
+                  "content-type": "application/json"}
+        self.req = requests.post(url,data=data,
+                                auth=HTTPBasicAuth(self.user, self.password),
+                                headers=header)
+
     def create_project(self, data):
 
-        header = {"X-Atlassian-Token": "nocheck",
-                  "content-type": "application/json"}
-        self.req = requests.post(self.bb_url + "projects/",data=data,
-                                auth=HTTPBasicAuth(self.user, self.password),
-                                headers=header)
+        self.req = self.ask_post_request(self.bb_url + "projects/",data=data)
 
     def create_repo(self, data, project_key):
-
-        header = {"X-Atlassian-Token": "nocheck",
-                  "content-type": "application/json"}
-        self.req = requests.post(self.bb_url + "projects/" + project_key +\
-                                "/repos",
-                                data=data,
-                                auth=HTTPBasicAuth(self.user, self.password),
-                                headers=header)
+        
+        self.req = self.ask_post_request(self.bb_url + "projects/" + project_key
+                                + "/repos",
+                                data=data)
 
     def project_exists(self, project_name, search_key="name"):
         projects = self.get_projects()
@@ -104,6 +104,14 @@ class BitBucket:
             return False
         else:
             return False
+
+    # Create meaningful project key for created projects
+    def create_project_key(self,project_name):
+        word_list = project_name.split(" ")
+        pk = ""
+        for word in word_list:
+            pk = pk + word[0]
+        return pk
 
     # Prevent project key conflicts
     def random_project_key(self,pk):

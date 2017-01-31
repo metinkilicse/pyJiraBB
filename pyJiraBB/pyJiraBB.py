@@ -1,24 +1,16 @@
 #!/usr/bin/env python
 
-
 import json
 import sys
 from Jira import Jira
 from BitBucket import BitBucket
 from config import *
 
-# Create meaningful project key for created projects
-def create_project_key(project_name):
-    word_list = project_name.split(" ")
-    pk = ""
-    for word in word_list:
-        pk = pk + word[0]
-    return pk
 
 if __name__ == "__main__":
     args = sys.argv
     if len(args) != 3:
-        print("ERROR : Use as pyJiraBB.py PK status ")
+        print("ERROR : Use as pyJiraBB.py PK issueStatus ")
         exit()
     pk = args[1]
     status = args[2]
@@ -40,7 +32,7 @@ if __name__ == "__main__":
             repo_name = issue.fields.customfield_10101
             # if both project and repo don't exist, add them
             if bb.project_exists(project_name) is False:
-                project_k = create_project_key(project_name)
+                project_k = bb.create_project_key(project_name)
                 project_key = bb.random_project_key(project_k)
                 p_data = {
                     "key" : project_key,
